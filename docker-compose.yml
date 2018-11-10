@@ -1,0 +1,8 @@
+version: '2'
+
+services:
+  tfl:
+    build: docker/images/truffle
+    working_dir: /app
+    volumes:
+      - .:/app

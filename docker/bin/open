@@ -1,0 +1,8 @@
+#!/bin/sh
+
+cd `dirname $0`
+if [ -e ../../.docker-machine ]; then
+  open http://$(./machine ip)
+else
+  open http://localhost
+fi

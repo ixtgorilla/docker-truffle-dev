@@ -1,0 +1,49 @@
+#!/bin/sh
+
+cd `dirname $0`
+if [ -e ../../.docker-machine ]; then
+  DOCKER_MACHINE_NAME=$(cat ../../.docker-machine)
+else
+  echo >&2 ".docker-machine is missing"
+  exit 1
+fi
+
+command="$1"
+case $command in
+create)
+  docker-machine create \
+      --driver virtualbox \
+      --virtualbox-cpu-count 2 \
+      --virtualbox-disk-size 20000 \
+      --virtualbox-memory 2048 \
+      $DOCKER_MACHINE_NAME
+  ;;
+config|env|inspect|ip|kill|provision|regenerate-certs|restart|rm|ssh|start|status|stop|upgrade|url)
+  docker-machine $command $DOCKER_MACHINE_NAME
+  ;;
+*)
+  cat >&2 <<EOT
+Usage: $0 COMMAND
+
+Commands:
+  config                Print the connection config for machine
+  create                Create a machine
+  env                   Display the commands to set up the environment for the Docker client
+  inspect               Inspect information about a machine
+  ip                    Get the IP address of a machine
+  kill                  Kill a machine
+  provision             Re-provision existing machines
+  regenerate-certs      Regenerate TLS Certificates for a machine
+  restart               Restart a machine
+  rm                    Remove a machine
+  ssh                   Log into or run a command on a machine with SSH.
+  start                 Start a machine
+  status                Get the status of a machine
+  stop                  Stop a machine
+  upgrade               Upgrade a machine to the latest version of Docker
+  url                   Get the URL of a machine
+All commands can be run with -h (or --help) for more information.
+EOT
+  exit 1
+  ;;
+esac
